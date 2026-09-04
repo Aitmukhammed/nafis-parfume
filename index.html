@@ -57,8 +57,19 @@ nav.scrolled{background:rgba(250,247,242,.85);border-color:var(--line)}
 .cart-btn{position:relative;display:flex;align-items:center;gap:9px;padding:10px 20px;border-radius:40px;
   background:var(--ink);color:var(--bg);font-weight:600;font-size:14px;transition:transform .3s,box-shadow .3s}
 .cart-btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(28,26,23,.25)}
-.cart-count{background:var(--accent);color:#fff;min-width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:700;padding:0 5px}
-@media(max-width:760px){.nav-links{display:none}}
+.cart-btn .cart-ic{flex:none;transition:transform .3s}
+.cart-btn:hover .cart-ic{transform:rotate(-8deg) scale(1.08)}
+.cart-count{background:var(--accent);color:#fff;min-width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:700;padding:0 5px;transition:transform .3s}
+.cart-btn.bump{animation:cartBump .55s cubic-bezier(.2,.9,.3,1.3)}
+@keyframes cartBump{0%{transform:scale(1)}30%{transform:scale(1.12) translateY(-3px)}55%{transform:scale(.96)}100%{transform:scale(1)}}
+.cart-btn.bump .cart-ic{animation:icShake .55s ease}
+@keyframes icShake{0%,100%{transform:rotate(0)}25%{transform:rotate(-14deg) scale(1.15)}60%{transform:rotate(10deg) scale(1.1)}}
+.cart-count.pop{animation:countPop .5s cubic-bezier(.2,.9,.3,1.4)}
+@keyframes countPop{0%{transform:scale(1)}40%{transform:scale(1.55)}100%{transform:scale(1)}}
+.fly-dot{position:fixed;z-index:500;width:20px;height:20px;border-radius:50%;
+  background:linear-gradient(135deg,var(--accent),var(--accent-deep));box-shadow:0 4px 14px rgba(47,93,138,.5);
+  pointer-events:none;will-change:transform,opacity}
+@media(max-width:760px){.nav-links{display:none}.cart-word{display:none}}
 
 /* hero */
 header{min-height:100vh;display:grid;grid-template-columns:1.05fr .95fr;align-items:center;gap:30px;
@@ -217,22 +228,31 @@ section{padding:clamp(70px,10vw,130px) clamp(18px,5vw,80px);position:relative}
 .drawer-head h3{font-size:28px;font-weight:500}
 .close-x{font-size:26px;width:40px;height:40px;border-radius:50%;background:var(--bg2);display:grid;place-items:center;transition:.3s}
 .close-x:hover{background:var(--line);transform:rotate(90deg)}
-.cart-items{flex:1;overflow-y:auto;padding:20px 26px;display:flex;flex-direction:column;gap:14px}
+.cart-items{flex:1;min-height:0;overflow-y:auto;padding:20px 26px;display:flex;flex-direction:column;gap:14px}
 .cart-items::-webkit-scrollbar{width:6px}.cart-items::-webkit-scrollbar-thumb{background:var(--accent);border-radius:6px}
 .empty{text-align:center;color:var(--soft);margin-top:60px}
 .empty .big{font-size:52px;margin-bottom:14px}
-.ci{display:flex;gap:14px;padding:14px;border-radius:16px;background:var(--card);border:1px solid var(--line);animation:slideIn .4s}
-@keyframes slideIn{from{opacity:0;transform:translateX(30px)}to{opacity:1;transform:none}}
-.ci .txt{flex:1}.ci .txt b{font-weight:600;font-size:15px}
-.ci .txt small{display:block;color:var(--soft);font-size:12px;margin-top:2px}
-.ci .txt .gift{color:var(--accent-deep);font-size:11px}
-.ci .right{text-align:right;display:flex;flex-direction:column;justify-content:space-between;align-items:flex-end}
-.ci .right .pr{font-weight:700;color:var(--ink)}
-.ci .del{font-size:12px;color:#c0392b;border-bottom:1px solid transparent;transition:.3s}
-.ci .del:hover{border-color:#c0392b}
-.qty{display:flex;align-items:center;gap:10px;margin-top:6px}
-.qty button{width:24px;height:24px;border-radius:7px;background:var(--bg2);border:1px solid var(--line);font-weight:700;transition:.2s}
-.qty button:hover{border-color:var(--accent)}
+.ci{display:flex;flex-direction:column;gap:12px;padding:14px 16px;border-radius:16px;background:var(--card);border:1px solid var(--line);flex:none;
+  transition:opacity .28s ease, transform .28s ease, max-height .28s ease, margin .28s ease, padding .28s ease;
+  max-height:220px;overflow:hidden}
+.ci.entering{opacity:0;transform:translateX(30px)}
+.ci.leaving{opacity:0;transform:translateX(30px);max-height:0;margin:0;padding-top:0;padding-bottom:0;border-width:0;gap:0}
+.ci-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.ci-info{min-width:0}
+.ci-info b{font-weight:600;font-size:15px;display:block;line-height:1.25}
+.ci-info small{display:block;color:var(--soft);font-size:12px;margin-top:2px}
+.ci-info .gift{display:inline-flex;align-items:center;gap:4px;color:var(--accent-deep);font-size:11px;margin-top:3px}
+.ci .pr{font-weight:700;color:var(--ink);white-space:nowrap;flex:none}
+.ci-bottom{display:flex;justify-content:space-between;align-items:center}
+.ci .del{display:grid;place-items:center;width:34px;height:34px;border-radius:10px;color:var(--soft);
+  background:transparent;border:1px solid transparent;transition:all .25s}
+.ci .del:hover{color:#c0392b;background:rgba(192,57,43,.1);border-color:rgba(192,57,43,.25);transform:translateY(-1px)}
+.ci .del:active{transform:scale(.9)}
+.qty{display:flex;align-items:center;gap:12px}
+.qty button{width:30px;height:30px;border-radius:9px;background:var(--bg2);border:1px solid var(--line);font-weight:700;font-size:16px;line-height:1;display:grid;place-items:center;transition:.2s}
+.qty button:hover{border-color:var(--accent);color:var(--accent)}
+.qty button:active{transform:scale(.9)}
+.qty .qv{min-width:20px;text-align:center;font-weight:600}
 .drawer-foot{padding:22px 26px;border-top:1px solid var(--line)}
 .foot-row{display:flex;justify-content:space-between;margin-bottom:8px;font-size:14px;color:var(--soft)}
 .foot-row.grand{font-size:22px;color:var(--ink);font-family:'Fraunces',serif;font-weight:500;margin:12px 0 18px}
@@ -281,7 +301,11 @@ footer a.wa .ic-svg{color:var(--accent-deep)}
     <a href="#builder">Собрать сет</a>
     <a href="#info">Доставка</a>
   </div>
-  <button class="cart-btn" onclick="openCart()">Корзина<span class="cart-count" id="cartCount">0</span></button>
+  <button class="cart-btn" id="cartBtn" onclick="openCart()">
+    <svg class="cart-ic" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/><path d="M2 3h3l2.4 12.2a1.5 1.5 0 0 0 1.5 1.2h8.1a1.5 1.5 0 0 0 1.5-1.2L21.5 7H6"/></svg>
+    <span class="cart-word">Корзина</span>
+    <span class="cart-count" id="cartCount">0</span>
+  </button>
 </nav>
 
 <header>
@@ -350,7 +374,7 @@ footer a.wa .ic-svg{color:var(--accent-deep)}
         <div class="r total"><span>Итого за сет</span><b id="setTotal">-</b></div>
       </div>
       <div class="set-gift" id="setGift" style="display:none"><svg class="ic-svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="4" rx="1"/><path d="M12 8v13"/><path d="M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7"/><path d="M7.5 8a2.5 2.5 0 0 1 0-5C9 3 12 5 12 8"/><path d="M16.5 8a2.5 2.5 0 0 0 0-5C15 3 12 5 12 8"/></svg><span>К каждому флакону 10 мл - <b>+3 мл в подарок</b></span></div>
-      <button class="add-set" id="addSetBtn" disabled onclick="addSet()">Выбери 3 аромата</button>
+      <button class="add-set" id="addSetBtn" disabled onclick="addSet(event)">Выбери 3 аромата</button>
     </div>
   </div>
 </section>
@@ -423,42 +447,157 @@ PERFUMES.forEach(p=>{
       <button class="active" data-v="5">5 мл · ${fmt(p.price*5)}</button>
       <button data-v="10">10 мл · ${fmt(p.price*10)}</button>
     </div>
-    <button class="add" onclick="addSingle('${p.id}')">В корзину</button>`;
+    <button class="add" onclick="addSingle('${p.id}',event)">В корзину</button>`;
   grid.appendChild(el);
   el.querySelectorAll('.vol-pick button').forEach(b=>{b.onclick=()=>{el.querySelectorAll('.vol-pick button').forEach(x=>x.classList.remove('active'));b.classList.add('active')};});
 });
 
 let cart=[];
-function addSingle(id){
+let uidSeq=0;
+function addSingle(id,ev){
   const p=PERFUMES.find(x=>x.id===id);
   const vol=+document.querySelector(`.vol-pick[data-id="${id}"] button.active`).dataset.v;
-  cart.push({type:'single',name:p.name,vol,price:p.price*vol,qty:1,gift:vol>=10});
-  updateCart();toast(`${p.name} · ${vol} мл добавлен`);
+  // ищем такой же товар (тот же аромат + объём) — объединяем
+  const exist=cart.find(x=>x.type==='single' && x.name===p.name && x.vol===vol);
+  if(exist){
+    exist.qty++;
+  }else{
+    cart.push({uid:++uidSeq,type:'single',name:p.name,vol,price:p.price*vol,qty:1,gift:vol>=10});
+  }
+  updateCart();
+  flyToCart(ev);
+  cartFX();
+  toast(`${p.name} · ${vol} мл добавлен`);
 }
-function addSet(){
+function addSet(ev){
   if(setPicks.length!==3)return;
   const names=setPicks.map(id=>PERFUMES.find(p=>p.id===id).name);
   const sub=setPicks.reduce((s,id)=>s+PERFUMES.find(p=>p.id===id).price*setVol,0);
-  cart.push({type:'set',name:`Сет 3 аромата (${setVol} мл)`,items:names,vol:setVol,price:Math.round(sub*0.85),qty:1,gift:setVol>=10});
-  updateCart();toast('Сет добавлен · скидка 15%');openCart();
+  // ключ состава сета (сортированный, чтобы порядок не влиял)
+  const key=[...names].sort().join('|')+'@'+setVol;
+  const exist=cart.find(x=>x.type==='set' && x.key===key);
+  if(exist){
+    exist.qty++;
+  }else{
+    cart.push({uid:++uidSeq,type:'set',key,name:`Сет 3 аромата (${setVol} мл)`,items:names,vol:setVol,price:Math.round(sub*0.85),qty:1,gift:setVol>=10});
+  }
+  updateCart();
+  flyToCart(ev);
+  cartFX();
+  toast('Сет добавлен · скидка 15%');openCart();
 }
-function changeQty(i,d){cart[i].qty+=d;if(cart[i].qty<1)cart.splice(i,1);updateCart();}
-function removeItem(i){cart.splice(i,1);updateCart();}
+function changeQty(uid,d){
+  const it=cart.find(x=>x.uid===uid); if(!it)return;
+  it.qty+=d;
+  if(it.qty<1){ removeItem(uid); return; }
+  updateCart(); cartFX();
+}
+function removeItem(uid){
+  const row=document.querySelector(`.ci[data-uid="${uid}"]`);
+  cart=cart.filter(x=>x.uid!==uid);
+  if(row){
+    row.classList.add('leaving');
+    setTimeout(()=>{ row.remove(); updateCart(); }, 300);
+  } else {
+    updateCart();
+  }
+  // счётчик/итоги обновляем сразу, не дожидаясь анимации
+  updateTotals();
+  cartFX();
+}
+function updateTotals(){
+  const cnt=cartCount();
+  document.getElementById('cartCount').textContent=cnt;
+  document.getElementById('footItems').textContent=cnt;
+  document.getElementById('footTotal').textContent=fmt(cartTotal());
+  const btn=document.getElementById('checkoutBtn');
+  if(btn) btn.disabled=!cart.length;
+}
 function cartTotal(){return cart.reduce((s,it)=>s+it.price*it.qty,0);}
 function cartCount(){return cart.reduce((s,it)=>s+it.qty,0);}
+
+// анимация иконки+счётчика (пульс/подпрыгивание) при любом изменении
+function cartFX(){
+  const btn=document.getElementById('cartBtn');
+  const cnt=document.getElementById('cartCount');
+  btn.classList.remove('bump'); cnt.classList.remove('pop');
+  void btn.offsetWidth; // рестарт анимации
+  btn.classList.add('bump'); cnt.classList.add('pop');
+}
+
+// летящий шарик от кнопки «в корзину» к иконке корзины
+function flyToCart(ev){
+  if(!ev)return;
+  const start=ev.currentTarget?ev.currentTarget.getBoundingClientRect():{left:ev.clientX,top:ev.clientY,width:0,height:0};
+  const target=document.getElementById('cartBtn').getBoundingClientRect();
+  const dot=document.createElement('div');
+  dot.className='fly-dot';
+  const sx=start.left+start.width/2-10, sy=start.top+start.height/2-10;
+  const tx=target.left+target.width/2-10, ty=target.top+target.height/2-10;
+  dot.style.left=sx+'px'; dot.style.top=sy+'px';
+  document.body.appendChild(dot);
+  const dx=tx-sx, dy=ty-sy;
+  dot.animate([
+    {transform:'translate(0,0) scale(1)',opacity:1},
+    {transform:`translate(${dx*0.5}px,${dy*0.5-60}px) scale(1.1)`,opacity:1,offset:.5},
+    {transform:`translate(${dx}px,${dy}px) scale(.3)`,opacity:.2}
+  ],{duration:700,easing:'cubic-bezier(.5,0,.5,1)'}).onfinish=()=>dot.remove();
+}
+
+function ciHTML(it){
+  return `
+    <div class="ci-top">
+      <div class="ci-info">
+        <b>${it.name}</b>
+        ${it.type==='set'?`<small>${it.items.join(' · ')}</small>`:`<small>${it.vol} мл</small>`}
+        ${it.gift?`<span class="gift"><svg class="ic-svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="4" rx="1"/><path d="M12 8v13"/><path d="M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7"/><path d="M7.5 8a2.5 2.5 0 0 1 0-5C9 3 12 5 12 8"/><path d="M16.5 8a2.5 2.5 0 0 0 0-5C15 3 12 5 12 8"/></svg> +3 мл в подарок${it.type==='set'?' к каждому':''}</span>`:''}
+      </div>
+      <span class="pr">${fmt(it.price*it.qty)}</span>
+    </div>
+    <div class="ci-bottom">
+      <div class="qty"><button onclick="changeQty(${it.uid},-1)">−</button><span class="qv">${it.qty}</span><button onclick="changeQty(${it.uid},1)">+</button></div>
+      <button class="del" onclick="removeItem(${it.uid})" aria-label="Удалить" title="Удалить"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg></button>
+    </div>`;
+}
+
 function updateCart(){
-  document.getElementById('cartCount').textContent=cartCount();
-  document.getElementById('footItems').textContent=cartCount();
+  const cnt=cartCount();
+  document.getElementById('cartCount').textContent=cnt;
+  document.getElementById('footItems').textContent=cnt;
   document.getElementById('footTotal').textContent=fmt(cartTotal());
   const box=document.getElementById('cartItems'),btn=document.getElementById('checkoutBtn');
-  if(!cart.length){box.innerHTML=`<div class="empty"><div class="big"><svg class="ic-svg" width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8h12l-1 12H7z"/><path d="M9 8a3 3 0 0 1 6 0"/></svg></div>Корзина пустая<br>Добавь ароматы из каталога</div>`;btn.disabled=true;return;}
+
+  if(!cart.length){
+    box.innerHTML=`<div class="empty"><div class="big"><svg class="ic-svg" width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8h12l-1 12H7z"/><path d="M9 8a3 3 0 0 1 6 0"/></svg></div>Корзина пустая<br>Добавь ароматы из каталога</div>`;
+    btn.disabled=true; return;
+  }
   btn.disabled=false;
-  box.innerHTML=cart.map((it,i)=>`
-    <div class="ci"><div class="txt"><b>${it.name}</b>
-      ${it.type==='set'?`<small>${it.items.join(' · ')}</small>`:`<small>${it.vol} мл</small>`}
-      ${it.gift?`<span class="gift"><svg class="ic-svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="4" rx="1"/><path d="M12 8v13"/><path d="M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7"/><path d="M7.5 8a2.5 2.5 0 0 1 0-5C9 3 12 5 12 8"/><path d="M16.5 8a2.5 2.5 0 0 0 0-5C15 3 12 5 12 8"/></svg> +3 мл в подарок${it.type==='set'?' к каждому':''}</span>`:''}
-      <div class="qty"><button onclick="changeQty(${i},-1)">−</button><span>${it.qty}</span><button onclick="changeQty(${i},1)">+</button></div>
-    </div><div class="right"><span class="pr">${fmt(it.price*it.qty)}</span><button class="del" onclick="removeItem(${i})">удалить</button></div></div>`).join('');
+  // убираем placeholder пустоты, если был
+  const emptyEl=box.querySelector('.empty'); if(emptyEl) box.innerHTML='';
+
+  const seen=new Set();
+  cart.forEach(it=>{
+    seen.add(it.uid);
+    let row=box.querySelector(`.ci[data-uid="${it.uid}"]`);
+    if(row){
+      // существующий товар — просто обновляем содержимое, без ре-анимации въезда
+      const qv=row.querySelector('.qv'), pr=row.querySelector('.pr');
+      if(qv && qv.textContent!=String(it.qty)){ qv.textContent=it.qty; qv.animate([{transform:'scale(1.4)'},{transform:'scale(1)'}],{duration:300,easing:'ease-out'}); }
+      if(pr) pr.textContent=fmt(it.price*it.qty);
+    }else{
+      // новый товар — создаём с анимацией въезда
+      row=document.createElement('div');
+      row.className='ci entering';
+      row.dataset.uid=it.uid;
+      row.innerHTML=ciHTML(it);
+      box.appendChild(row);
+      requestAnimationFrame(()=>row.classList.remove('entering'));
+    }
+  });
+  // удаляем строки, которых уже нет в cart (кроме тех, что сейчас уезжают)
+  box.querySelectorAll('.ci').forEach(row=>{
+    if(!seen.has(+row.dataset.uid) && !row.classList.contains('leaving')) row.remove();
+  });
 }
 function openCart(){document.getElementById('drawer').classList.add('open');document.getElementById('overlay').classList.add('open');}
 function closeCart(){document.getElementById('drawer').classList.remove('open');document.getElementById('overlay').classList.remove('open');}
